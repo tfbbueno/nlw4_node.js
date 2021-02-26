@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { getCustomRepository } from "typeorm";
+import { AppError } from "../errors/AppError";
 import { SurveysRepository } from "../repositories/SurveysRepository";
 
 class SurveysController {
@@ -15,9 +16,7 @@ class SurveysController {
     });
 
     if (surveyAlreadyExists) {
-      return res.status(400).json({
-        error: "Pesquisa já existe!",
-      });
+      throw new AppError("Pesquisa já existe!");
     }
     await surveysRepository.save(survey);
 
