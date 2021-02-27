@@ -30,5 +30,17 @@ class SurveysController {
 
     return res.status(201).json(all);
   }
+
+  async getSurvey(req: Request, res: Response) {
+    const { id } = req.params;
+    const repository = getCustomRepository(SurveysRepository);
+    const survey = await repository.findOne({
+      id,
+    });
+
+    if (!survey) throw new AppError("Pesquisa não encontrada!");
+
+    return res.status(201).json(survey);
+  }
 }
 export { SurveysController };

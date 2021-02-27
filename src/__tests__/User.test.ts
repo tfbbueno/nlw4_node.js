@@ -33,4 +33,27 @@ describe("User", async () => {
 
     expect(response.status).toBe(400);
   });
+
+  it("Should be able to get all users", async () => {
+    await request(app).post("/users").send({
+      email: "user2@email.com",
+      name: "User Two",
+    });
+
+    const response = await request(app).get("/users");
+
+    expect(response.body.length).toBe(2);
+    expect(response.status).toBe(201);
+  });
+
+  it("Should be able to get a user by id", async () => {
+    const userResponse = await request(app).get("/users");
+
+    const user = userResponse.body;
+
+    const response = await request(app).get("/users/" + user[0].id);
+
+    expect(response.status).toBe(201);
+    expect(response.body).toHaveProperty("id");
+  });
 });

@@ -35,5 +35,25 @@ class UserController {
 
     return res.status(201).json(user);
   }
+
+  async show(req: Request, res: Response) {
+    const repository = getCustomRepository(UsersRepository);
+
+    const all = await repository.find();
+
+    return res.status(201).json(all);
+  }
+
+  async getUser(req: Request, res: Response) {
+    const { id } = req.params;
+    const repository = getCustomRepository(UsersRepository);
+    const user = await repository.findOne({
+      id,
+    });
+
+    if (!user) throw new AppError("Usuário não encontrado!");
+
+    return res.status(201).json(user);
+  }
 }
 export { UserController };

@@ -34,5 +34,17 @@ describe("Surveys", async () => {
     const response = await request(app).get("/surveys");
 
     expect(response.body.length).toBe(2);
+    expect(response.status).toBe(201);
+  });
+
+  it("Should be able to get a survey by id", async () => {
+    const surveyResponse = await request(app).get("/surveys");
+
+    const survey = surveyResponse.body;
+
+    const response = await request(app).get("/surveys/" + survey[0].id);
+
+    expect(response.status).toBe(201);
+    expect(response.body).toHaveProperty("id");
   });
 });

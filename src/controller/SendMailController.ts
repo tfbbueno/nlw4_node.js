@@ -18,14 +18,14 @@ class SendMailController {
     const user = await usersRepository.findOne({ email });
 
     if (!user) {
-      throw new AppError("Usuário não existe!");
+      throw new AppError("Usuário não existe!", 400);
     }
     const survey = await surveysRepository.findOne({
       id: survey_id,
     });
 
     if (!survey) {
-      throw new AppError("Pesquisa não existe!");
+      throw new AppError("Pesquisa não existe!", 400);
     }
     const surveyUserAlreadyExists = await surveysUsersRepository.findOne({
       where: { user_id: user.id, value: null },
@@ -45,7 +45,7 @@ class SendMailController {
     if (surveyUserAlreadyExists) {
       variables.id = surveyUserAlreadyExists.id;
       await SendMailService.execute(email, survey.title, variables, npsPath);
-      return res.json(surveyUserAlreadyExists);
+      return res.status(201).json(surveyUserAlreadyExists);
     }
 
     const surveyUser = surveysUsersRepository.create({
@@ -58,7 +58,8 @@ class SendMailController {
     variables.id = surveyUser.id;
 
     await SendMailService.execute(email, survey.title, variables, npsPath);
-    res.json(surveyUser);
+
+    return res.status(201).json(surveyUser);
   }
 }
 export { SendMailController };
